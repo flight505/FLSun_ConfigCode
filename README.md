@@ -2,6 +2,16 @@
 
 This repository contains Klipper configuration files and custom macros for the FLSUN S1 PRO delta 3D printer with Direct Drive Extruder (DDE).
 
+## ⚠️ IMPORTANT: Macro Name Changes
+
+Due to Klipper parser limitations, all macros starting with "S1_PRO" have been renamed to "SPRO":
+- Use `SPRO_PRINT_END` instead of ~~S1_PRO_PRINT_END~~
+- Use `SPRO_PRINT_START` instead of ~~S1_PRO_PRINT_START~~
+- Use `SPRO_FULL_CALIBRATION` instead of ~~S1_PRO_FULL_CALIBRATION~~
+- And so on for all other macros
+
+**Why?** Klipper's parser interprets "S1" at the start of macro names as a G-code command, causing "Unknown command: S1" errors.
+
 ## ⚡ Recent Configuration Improvements (2025-07-20)
 
 Major configuration improvements have been implemented to resolve critical issues and optimize performance:
@@ -68,7 +78,7 @@ During filament loading/unloading operations, the sensors must be disabled becau
 The configuration files contain comprehensive macros organized into the following categories:
 
 ### 1. **Configuration and Settings**
-- `_S1_PRO_SETTINGS` - Central configuration for all macro parameters
+- `_SPRO_SETTINGS` - Central configuration for all macro parameters
 
 ### 2. **Filament Management**
 - `SMART_LOAD` - Intelligent filament loading with sensor management
@@ -85,25 +95,25 @@ The configuration files contain comprehensive macros organized into the followin
 - `CHECK_SENSORS` / `SENSOR_STATUS` - Diagnostic tool for sensor status
 
 ### 4. **Temperature Management**
-- `S1_PRO_MATERIAL_SETTINGS` - Apply material-specific temperatures and Z-offset
-- `S1_PRO_HEAT_ZONES` - Smart dual-zone heating for materials
+- `SPRO_MATERIAL_SETTINGS` - Apply material-specific temperatures and Z-offset
+- `SPRO_HEAT_ZONES` - Smart dual-zone heating for materials
 - `PID_HOTEND` - Hotend PID calibration
 - `PID_BED` - Bed PID calibration (both zones)
 
 ### 5. **Bed Leveling & Calibration**
-- `S1_PRO_BED_LEVEL` - Enhanced bed leveling with temperature preservation
+- `SPRO_BED_LEVEL` - Enhanced bed leveling with temperature preservation
 - `BED_LEVEL_1` / `bed_level_1` - Delta calibration
 - `BED_LEVEL_2` / `bed_level_2` - Bed mesh calibration
-- `S1_PRO_MESH_MANAGER` - Temperature-based mesh management
-- `S1_PRO_FULL_CALIBRATION` - Complete calibration sequence
+- `SPRO_MESH_MANAGER` - Temperature-based mesh management
+- `SPRO_FULL_CALIBRATION` - Complete calibration sequence
 - `ZUP` / `ZDOWN` - Z-offset fine adjustment (±0.025mm)
 - `CALIBRATE_MOTOR` - Motor calibration routine
 - `MEASURING_RESONANCES` - Input shaper calibration
 
 ### 6. **Print Management**
-- `S1_PRO_PRINT_START` - Comprehensive print initialization
-- `S1_PRO_PRINT_END` - Safe print completion procedure
-- `S1_PRO_PRIME_LINE` - Draw prime line for nozzle priming
+- `SPRO_PRINT_START` - Comprehensive print initialization
+- `SPRO_PRINT_END` - Safe print completion procedure
+- `SPRO_PRIME_LINE` - Draw prime line for nozzle priming
 - `START_PRINT` - Power loss recovery aware print start
 - `END_PRINT` - Power loss recovery aware print end
 - `PAUSE` / `RESUME` - Print pause/resume with position save
@@ -122,7 +132,7 @@ The configuration files contain comprehensive macros organized into the followin
 - `drying_box_1` / `drying_box_off` - Control filament dryer
 
 ### 9. **Maintenance & Utilities**
-- `S1_PRO_MAINTENANCE_MODE` - Enter safe maintenance mode
+- `SPRO_MAINTENANCE_MODE` - Enter safe maintenance mode
 - `TMC` - Dump TMC driver information
 - `save_time` - Track total print time
 - `WAIT_FOR` - Wait with progress updates
@@ -137,7 +147,7 @@ The configuration files contain comprehensive macros organized into the followin
 
 ## Detailed Macro Descriptions
 
-### _S1_PRO_SETTINGS
+### _SPRO_SETTINGS
 **Purpose**: Centralized configuration storage for all macro parameters  
 **Variables**:
 - `extruder_temp_*`: Temperature settings for each material
@@ -162,17 +172,19 @@ The configuration files contain comprehensive macros organized into the followin
 6. Prompts user to re-enable sensors after completion
 
 ### SMART_UNLOAD
-**Purpose**: Safely unloads filament with proper retraction sequence  
+**Purpose**: Safely unloads filament with enhanced tip-forming to prevent jams  
 **Parameters**:
 - `TEMP` (optional): Override temperature (default: 235°C)
 **Process**:
 1. Heats extruder to specified temperature
 2. Disables sensors automatically
-3. Multi-stage unloading optimized for direct drive:
-   - Retract from nozzle (0.5mm @ 35mm/s)
-   - Clear hotend (15mm @ 25mm/s)
-   - Final retract (15mm @ 50mm/s)
+3. Enhanced 4-stage unloading with tip forming:
+   - Tip forming: Small push (2mm) and retract to prevent stringing
+   - Cooling moves: Multiple retracts/pushes to shape tip properly
+   - Clear hotend: Controlled retraction (10mm @ 30mm/s)
+   - Final retract: Fast movement away from gears (10mm @ 50mm/s)
 4. Prompts for manual sensor re-enabling
+**Key Improvement**: Prevents "mushroom" tip formation that causes gear jams
 
 ### LOAD_[MATERIAL] / UNLOAD_[MATERIAL]
 **Purpose**: Material-specific wrappers for smart load/unload with preset temperatures  
@@ -211,7 +223,7 @@ The configuration files contain comprehensive macros organized into the followin
 4. Turns off hotend after completion
 **Usage**: Perfect for purging old colors or materials after filament change
 
-### S1_PRO_MATERIAL_SETTINGS
+### SPRO_MATERIAL_SETTINGS
 **Purpose**: Applies comprehensive material-specific settings  
 **Parameters**:
 - `MATERIAL`: One of PLA, PETG, ABS, ASA, TPU, PC
@@ -221,7 +233,7 @@ The configuration files contain comprehensive macros organized into the followin
 - Z-offset adjustment for material characteristics
 **Usage**: Call before printing or when switching materials
 
-### S1_PRO_BED_LEVEL
+### SPRO_BED_LEVEL
 **Purpose**: Enhanced bed leveling routine preserving temperatures  
 **Parameters**:
 - `BED_TEMP` (optional): Override bed temperature
@@ -232,7 +244,7 @@ The configuration files contain comprehensive macros organized into the followin
 - Restores original temperatures
 - Shows bed mesh visualization
 
-### S1_PRO_PRINT_START
+### SPRO_PRINT_START
 **Purpose**: Comprehensive print preparation sequence  
 **Parameters**:
 - `BED_TEMP`: Target bed temperature
@@ -246,7 +258,7 @@ The configuration files contain comprehensive macros organized into the followin
 5. Prime line routine (delta-optimized)
 6. Ready for print
 
-### S1_PRO_PRINT_END
+### SPRO_PRINT_END
 **Purpose**: Safe print completion and cooldown  
 **Features**:
 - Coordinated retraction
@@ -255,7 +267,7 @@ The configuration files contain comprehensive macros organized into the followin
 - Controlled cooldown of all heaters
 - Motor idle timeout
 
-### S1_PRO_FULL_CALIBRATION
+### SPRO_FULL_CALIBRATION
 **Purpose**: Complete automated calibration sequence for the S1 PRO - performs ALL calibrations  
 **Process** (in order):
 1. **Motor Calibration** - Calibrates all three delta motors
@@ -273,7 +285,7 @@ The configuration files contain comprehensive macros organized into the followin
 - If print quality degrades
 **Note**: Requires Klipper restart after completion to apply all calibrations
 
-### S1_PRO_MAINTENANCE_MODE
+### SPRO_MAINTENANCE_MODE
 **Purpose**: Enter safe maintenance mode for manual operations  
 **Actions**:
 - Disables all filament sensors
@@ -282,7 +294,7 @@ The configuration files contain comprehensive macros organized into the followin
 - Disables extruder stepper
 **Usage**: Run before performing manual maintenance like nozzle changes or cleaning
 
-### S1_PRO_HEAT_ZONES
+### SPRO_HEAT_ZONES
 **Purpose**: Smart dual-zone bed heating based on material type  
 **Parameters**:
 - `MATERIAL`: Material type (PLA, PETG, ABS, ASA, TPU, PC)
@@ -291,7 +303,7 @@ The configuration files contain comprehensive macros organized into the followin
 - Waits for both zones to reach temperature
 - Uses material-specific temperature profiles from _S1_PRO_SETTINGS
 
-### S1_PRO_MESH_MANAGER
+### SPRO_MESH_MANAGER
 **Purpose**: Automatically load or create bed mesh for current temperature  
 **Parameters**:
 - `BED_TEMP`: Target bed temperature
@@ -301,14 +313,14 @@ The configuration files contain comprehensive macros organized into the followin
 3. Creates and saves new profile if not found
 **Naming**: Profiles saved as `s1pro_[temp]c` (e.g., s1pro_60c)
 
-### S1_PRO_PRIME_LINE
+### SPRO_PRIME_LINE
 **Purpose**: Draw a prime line to prepare nozzle before printing  
 **Process**:
 1. Moves to safe position at edge of bed (Y-145)
 2. Draws line while extruding ~26mm of filament
 3. Creates consistent pressure in nozzle
 4. Removes any oozing or old material
-**Note**: Automatically called by S1_PRO_PRINT_START
+**Note**: Automatically called by SPRO_PRINT_START
 
 ### WAIT_FOR
 **Purpose**: Wait for specified time with progress updates  
@@ -342,6 +354,15 @@ If the printer screen animation doesn't complete:
 3. Verify the macro completed (look for "Load complete" message)
 4. If stuck, you can manually run `SET_STEPPER_ENABLE STEPPER=extruder ENABLE=0`
 
+### Interface Locked/Unresponsive
+If the web interface becomes unresponsive or "Unlock" button doesn't work:
+1. **Common with embedded browsers** - OrcaSlicer, PrusaSlicer built-in browsers often have issues
+2. **Use external browser** - Open Fluidd/Mainsail in Chrome, Firefox, or Safari
+3. **Clear browser cache** - Force refresh with Ctrl+F5 (Cmd+Shift+R on Mac)
+4. **Check resources** - Run `free -h` in SSH to check if system is low on memory
+5. **Restart interface** - `sudo service nginx restart` or `sudo service moonraker restart`
+6. **Last resort** - Restart Klipper: `sudo service klipper restart`
+
 ### False Sensor Triggers
 1. Run `CHECK_SENSORS` to verify state
 2. Ensure sensors were disabled during last filament change
@@ -354,6 +375,39 @@ If the printer screen animation doesn't complete:
   - Incorrect tube routing
   - Worn tube requiring replacement
 - Note: Unlike bowden systems, the guide tube doesn't affect retraction settings
+
+## Advanced Features
+
+### Exclude Object Support
+The printer now supports excluding individual objects during multi-part prints:
+- **Enable in Slicer**: Turn on "Label objects" in PrusaSlicer/OrcaSlicer
+- **During Print**: Use the web interface to exclude failed objects
+- **G-code Commands**:
+  - `EXCLUDE_OBJECT NAME=object_name` - Exclude specific object
+  - `EXCLUDE_OBJECT_DEFINE` - Define objects (handled by slicer)
+- **Benefits**: Save time and material when one object fails in a multi-part print
+
+### Enhanced Filament Change (M600)
+Improved M600 implementation with proper delta positioning:
+- **Usage**: `M600` or `M600 X=0 Y=-140 Z=10`
+- **Features**:
+  - Saves current position and state
+  - Moves to safe change position
+  - Performs enhanced unload with tip forming
+  - Waits for user to load new filament
+  - Restores position after change
+
+### TMC5160 Advanced Features
+The extruder motor now uses advanced TMC5160 features:
+- **StealthChop**: Ultra-quiet operation
+- **CoolStep**: Automatic current reduction for efficiency
+- **Interpolation**: 256 microstep interpolation for smooth motion
+
+### Thermal Protection
+Enhanced thermal runaway protection for all heaters:
+- Monitors temperature rise rates
+- Prevents runaway conditions
+- Automatic shutdown on anomalies
 
 ## Safety Notes
 
@@ -405,7 +459,7 @@ If the printer screen animation doesn't complete:
 
 #### 3. **Legacy Macro Handling** (printer.cfg)
 - Converted old bed_level_1/2 and LOAD/UNLOAD_FILAMENT to aliases
-- Now redirect to enhanced S1_PRO versions with proper sensor management
+- Now redirect to enhanced SPRO versions with proper sensor management
 
 ### Technical Details
 

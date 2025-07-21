@@ -1,5 +1,112 @@
 # Changelog
 
+## [2025-07-21] - Safety Enhancements and Advanced Features
+
+### Summary
+Implemented critical safety improvements, TMC5160 enhancements, improved filament handling, and advanced features like exclude object support based on configuration analysis and deep research.
+
+### Critical Safety Fixes
+
+#### 1. **Build Volume Safety Limits** (printer.cfg)
+- Added explicit position limits for delta kinematics
+- Prevents movements outside safe operating area
+- Added: `minimum_x/y: -165`, `maximum_x/y: 165`, `minimum_z: 0`, `maximum_z: 430`
+
+#### 2. **Extruder Safety Parameters** (printer.cfg)
+- Reduced `max_extrude_cross_section` from 50 to 5.0 (more reasonable limit)
+- Added `instantaneous_corner_velocity: 1.0` for better pressure advance performance
+
+#### 3. **Thermal Runaway Protection** (printer.cfg)
+- Added `[verify_heater]` sections for extruder and both bed zones
+- Prevents dangerous thermal runaway conditions
+- Configured appropriate timeouts and thresholds for each heater
+
+### TMC5160 Enhancements (printer.cfg)
+
+- **interpolate: True** - Enables 256 microstep interpolation for smoother motion
+- **coolstep_threshold: 80** - Enables CoolStep for improved motor efficiency
+- **stealthchop_threshold: 999999** - Enables StealthChop for ultra-quiet operation
+
+### Enhanced Filament Handling
+
+#### 1. **Improved SMART_UNLOAD** (s1_pro_macros.cfg)
+- Added tip-forming sequence to prevent blob formation
+- 4-stage process: tip forming, cooling moves, clear hotend, final retract
+- Prevents filament jamming in extruder gears
+- Based on research of common S1 PRO filament issues
+
+#### 2. **Enhanced M600** (printer.cfg)
+- Full filament change implementation with proper positioning
+- Saves/restores printer state
+- Integrated with SMART_UNLOAD for reliable operation
+- Parameters: X, Y, Z for custom change position
+
+### New Features
+
+#### 1. **Exclude Object Support** (printer.cfg)
+- Added `[exclude_object]` section
+- Enables selective object cancellation during multi-part prints
+- Compatible with PrusaSlicer/OrcaSlicer "Label objects" feature
+
+#### 2. **Temperature Wait Macros** (printer.cfg)
+- `WAIT_HOTEND TEMP=xxx` - Convenience macro for hotend temperature
+- `WAIT_BED TEMP=xxx` - Convenience macro for bed temperature
+
+### Technical Improvements
+
+- Proper tip forming prevents "mushrooming" that causes extruder gear jams
+- TMC5160 improvements reduce motor noise and heat
+- Safety limits prevent crashes and equipment damage
+- Exclude object saves material on failed multi-part prints
+
+### Action Required
+- Restart Klipper to apply all changes
+- Test new filament unload sequence with each material type
+- Enable "Label objects" in slicer for exclude object feature
+
+---
+
+## [2025-07-21] - Critical Fix: Macro Naming Parser Issue
+
+### Summary
+Fixed "Unknown command: S1" error caused by Klipper's macro naming rules. All S1_PRO macros have been renamed to SPRO to comply with Klipper's parser requirements. Added comprehensive troubleshooting guide for this issue and web interface freezing problems.
+
+### Root Cause
+Klipper's G-code parser has strict rules: if numbers are used in macro names, they must ALL be at the end. The parser was interpreting "S1" at the beginning of "S1_PRO_PRINT_END" as a traditional G-code command (single letter + number), which doesn't exist, causing the error.
+
+### Files Changed
+
+#### 1. **s1_pro_macros.cfg** (MODIFIED)
+All S1_PRO macros renamed to SPRO:
+- `_S1_PRO_SETTINGS` → `_SPRO_SETTINGS`
+- `S1_PRO_PRINT_START` → `SPRO_PRINT_START`
+- `S1_PRO_PRINT_END` → `SPRO_PRINT_END`
+- `S1_PRO_HEAT_ZONES` → `SPRO_HEAT_ZONES`
+- `S1_PRO_MATERIAL_SETTINGS` → `SPRO_MATERIAL_SETTINGS`
+- `S1_PRO_MESH_MANAGER` → `SPRO_MESH_MANAGER`
+- `S1_PRO_PRIME_LINE` → `SPRO_PRIME_LINE`
+- `S1_PRO_MAINTENANCE_MODE` → `SPRO_MAINTENANCE_MODE`
+- `S1_PRO_FULL_CALIBRATION` → `SPRO_FULL_CALIBRATION`
+
+All internal references and messages updated accordingly.
+
+#### 2. **TROUBLESHOOTING.md** (NEW)
+Created comprehensive troubleshooting guide covering:
+- "Unknown command: S1" error explanation and solution
+- Web interface (Fluidd/Mainsail) freezing issues
+- Macro naming best practices
+- Quick diagnostics commands
+
+#### 3. **README.md** (MODIFIED)
+Updated all documentation to reflect new SPRO macro names.
+
+### Action Required
+**IMPORTANT**: Update your slicer start/end G-code to use the new macro names:
+- Change `S1_PRO_PRINT_START` to `SPRO_PRINT_START`
+- Change `S1_PRO_PRINT_END` to `SPRO_PRINT_END`
+
+---
+
 ## [2025-07-20] - Critical Update: Direct Drive Extruder Configuration
 
 ### Summary
@@ -52,7 +159,7 @@ Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Dr
   - Removed `M104 S0` to maintain temperature for subsequent operations
   - Screen now properly completes loading animation and becomes responsive
 
-#### S1_PRO_FULL_CALIBRATION Enhanced:
+#### SPRO_FULL_CALIBRATION Enhanced:
 - **Previous**: Only performed delta calibration and bed meshes
 - **Now includes**: Complete calibration sequence:
   1. Motor calibration (CALIBRATE_MOTOR)
