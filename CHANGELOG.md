@@ -1,5 +1,39 @@
 # Changelog
 
+## [2025-07-21] - Timelapse Configuration and TMC5160 Fix
+
+### Summary
+Fixed TMC5160 configuration error and added comprehensive timelapse support with proper documentation for filename requirements.
+
+### Fixes
+
+#### 1. **TMC5160 Configuration Error** (printer.cfg)
+- **Issue**: `coolstep_threshold` is not a valid parameter for TMC5160 in standard Klipper
+- **Fix**: Removed invalid parameter while keeping valid ones (interpolate, stealthchop_threshold)
+- **Note**: CoolStep requires klipper_tmc_autotune extension if needed
+
+### New Features
+
+#### 1. **Timelapse Support** (moonraker.conf, printer.cfg, s1_pro_macros.cfg)
+- Added `[timelapse]` configuration to moonraker.conf
+- Added `[update_manager timelapse]` for automatic updates
+- Included timelapse.cfg in printer.cfg
+- Created TIMELAPSE macro for easy access
+
+#### 2. **Documentation Updates** (README.md)
+- Added timelapse configuration instructions
+- Documented slicer setup requirements for TIMELAPSE_TAKE_FRAME
+- Added G-code filename best practices (use underscores, avoid special characters)
+- Explained why proper filenames prevent Klipper crashes
+
+### Action Required
+1. **Restart Klipper** to clear TMC5160 error
+2. **Configure Slicer**: Add `TIMELAPSE_TAKE_FRAME` to layer change G-code
+3. **Select Camera**: In web interface Settings → Timelapse
+4. **Update Filenames**: Use underscores instead of spaces in G-code files
+
+---
+
 ## [2025-07-21] - Safety Enhancements and Advanced Features
 
 ### Summary

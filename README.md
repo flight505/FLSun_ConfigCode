@@ -409,6 +409,36 @@ Enhanced thermal runaway protection for all heaters:
 - Prevents runaway conditions
 - Automatic shutdown on anomalies
 
+### Timelapse Support
+Create stunning timelapse videos of your prints:
+- **Configuration**: Already included via `[include timelapse.cfg]`
+- **Usage**: Timelapse is off by default - enable in web interface
+- **Slicer Setup Required**: Add `TIMELAPSE_TAKE_FRAME` to layer change G-code:
+  - **PrusaSlicer/OrcaSlicer**: Printer Settings → Custom G-code → Before layer change
+  - **Cura**: Extensions → Post Processing → Insert at layer change
+- **Camera Selection**: Select camera in Settings → Timelapse before use
+- **Modes**: 
+  - Layermacro (recommended): Takes photo at each layer
+  - Hyperlapse: Time-based capture
+
+## Best Practices
+
+### G-code Filename Requirements
+Klipper and its web interfaces have specific filename requirements:
+- **Use underscores** instead of spaces (e.g., `test_print_PLA.gcode` not `test print PLA.gcode`)
+- **Avoid special characters**: No °, ®, ™, or Unicode characters
+- **Stick to**: Letters, numbers, underscores (_), and hyphens (-)
+- **Slicer Output Format**: Configure your slicer to use underscores:
+  ```
+  [input_filename_base]_[layer_height]mm_[filament_type].gcode
+  ```
+
+### Why Filename Rules Matter
+- Prevents errors when downloading files
+- Avoids thumbnail generation issues
+- Ensures compatibility with Linux filesystem
+- Prevents Klipper crashes from special characters
+
 ## Safety Notes
 
 - Never force filament if resistance is encountered
