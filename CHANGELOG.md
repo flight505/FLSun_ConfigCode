@@ -3,7 +3,7 @@
 ## [2025-07-20] - Critical Update: Direct Drive Extruder Configuration
 
 ### Summary
-Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Drive Extruder (DDE), not a bowden system. The long PTFE tube is only a filament guide from the dryer to the direct drive extruder. All settings have been updated to reflect proper direct drive characteristics.
+Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Drive Extruder (DDE), not a bowden system. The long PTFE tube is only a filament guide from the dryer to the direct drive extruder. All settings have been updated to reflect proper direct drive characteristics. Additional fixes for temperature management and macro messages.
 
 ---
 
@@ -20,6 +20,12 @@ Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Dr
 - Direct drive extruders require pressure advance values between 0.02-0.08
 - The 700-800mm tube is just a guide, not a bowden tube affecting extrusion
 - Direct drive only needs ~100mm max extrude distance for filament changes
+
+#### CLEAN_FILAMENT Macro Fix:
+- **Issue**: Displayed "unload_filament done!" after extruding 160mm (confusing message)
+- **Fix**: Changed messages to "Heating for filament purge..." and "Filament purge complete!"
+- **Added**: `M104 S0` to turn off hotend after purging (safety improvement)
+- **Purpose**: Now clearly indicates it's for purging/cleaning, not unloading
 
 ---
 
@@ -41,7 +47,22 @@ Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Dr
 
 #### Other Changes:
 - Updated message from "Open bowden coupling" to "Remove filament from guide tube"
-- **FIXED**: Added `M104 S0` to turn off hotend after loading filament (was staying heated indefinitely)
+- **FIXED**: Screen animation blocking issue in SMART_LOAD:
+  - Added `SET_STEPPER_ENABLE STEPPER=extruder ENABLE=0` to properly signal completion
+  - Removed `M104 S0` to maintain temperature for subsequent operations
+  - Screen now properly completes loading animation and becomes responsive
+
+#### S1_PRO_FULL_CALIBRATION Enhanced:
+- **Previous**: Only performed delta calibration and bed meshes
+- **Now includes**: Complete calibration sequence:
+  1. Motor calibration (CALIBRATE_MOTOR)
+  2. Hotend PID tuning at 240°C
+  3. Dual-zone bed PID tuning at 60°C
+  4. Input shaper/resonance calibration
+  5. Delta calibration
+  6. Bed mesh profiles for multiple temperatures
+- **Duration**: ~45-60 minutes (was ~20-30 minutes)
+- **Purpose**: True one-command complete system calibration
 
 ---
 
