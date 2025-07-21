@@ -1,5 +1,29 @@
 # Changelog
 
+## [2025-07-21] - Delta Printer Build Volume Fix
+
+### Summary
+Fixed critical configuration error where Cartesian build volume parameters were incorrectly added to delta printer configuration.
+
+### Fix
+
+#### **Invalid Build Volume Parameters** (printer.cfg)
+- **Issue**: Parameters `minimum_x`, `maximum_x`, `minimum_y`, `maximum_y`, `minimum_z`, `maximum_z` are not valid for delta kinematics
+- **Error**: "Option 'minimum_x' is not valid in section 'printer'"
+- **Fix**: Removed all Cartesian build volume parameters
+- **Explanation**: Delta printers use `print_radius` and `minimum_z_position` to define their cylindrical build volume
+
+### Technical Details
+Delta printers in Klipper define build volume differently than Cartesian printers:
+- **Horizontal limits**: Circular area defined by `print_radius` (165mm for S1 PRO)
+- **Vertical limits**: Bottom defined by `minimum_z_position` (-5mm), top determined by mechanical limits
+- **Build shape**: Cylinder with dome-shaped top (not rectangular box)
+
+### Action Required
+Restart Klipper to apply the fix.
+
+---
+
 ## [2025-07-21] - Timelapse Configuration and TMC5160 Fix
 
 ### Summary
