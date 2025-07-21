@@ -12,6 +12,7 @@ Major configuration improvements have been implemented to resolve critical issue
 3. **Power Loss Recovery** - Fixed shutdown sequence that prevented proper recovery
 4. **Sensor Detection** - Optimized motion sensor sensitivity for direct drive system
 5. **Safety Improvements** - Resolved relay_off macro that was incorrectly disabling the extruder
+6. **Temperature Management** - Fixed SMART_LOAD macro to turn off hotend after loading (was staying heated indefinitely)
 
 ### 🚀 New Features:
 - **M141/M191 Commands** - Control outer bed zone like standard bed commands
@@ -117,7 +118,8 @@ The `s1_pro_macros.cfg` file contains comprehensive macros organized into the fo
    - Initial feed (10mm @ 5mm/s)
    - Prime extruder (15mm @ 10mm/s)
    - Final extrusion (5mm @ 2.5mm/s)
-4. Prompts user to re-enable sensors after completion
+4. Turns off hotend temperature after loading
+5. Prompts user to re-enable sensors after completion
 
 ### SMART_UNLOAD
 **Purpose**: Safely unloads filament with proper retraction sequence  

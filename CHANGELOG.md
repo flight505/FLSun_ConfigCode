@@ -41,6 +41,7 @@ Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Dr
 
 #### Other Changes:
 - Updated message from "Open bowden coupling" to "Remove filament from guide tube"
+- **FIXED**: Added `M104 S0` to turn off hotend after loading filament (was staying heated indefinitely)
 
 ---
 
@@ -85,6 +86,7 @@ Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Dr
 - More accurate filament sensor detection
 - Improved response to filament changes
 - Better handling of flexible filaments
+- Hotend properly turns off after loading filament (safety improvement)
 
 ---
 
