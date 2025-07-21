@@ -1,5 +1,103 @@
 # Changelog
 
+## [2025-07-20] - Critical Update: Direct Drive Extruder Configuration
+
+### Summary
+Major configuration overhaul after discovering the FLSUN S1 PRO uses a Direct Drive Extruder (DDE), not a bowden system. The long PTFE tube is only a filament guide from the dryer to the direct drive extruder. All settings have been updated to reflect proper direct drive characteristics.
+
+---
+
+## Files Changed
+
+### 1. **printer.cfg** (MODIFIED)
+
+#### Critical Changes:
+- **pressure_advance**: Changed from 0.6 (bowden) to 0.05 (direct drive)
+- **pressure_advance_smooth_time**: Added 0.040 for direct drive smoothing
+- **max_extrude_only_distance**: Reduced from 800 to 100 (standard for direct drive)
+
+#### Why These Changes:
+- Direct drive extruders require pressure advance values between 0.02-0.08
+- The 700-800mm tube is just a guide, not a bowden tube affecting extrusion
+- Direct drive only needs ~100mm max extrude distance for filament changes
+
+---
+
+### 2. **s1_pro_macros.cfg** (MODIFIED)
+
+#### SMART_LOAD Changes:
+- Reduced total load distance from 600mm to 30mm
+- Simplified from 5 stages to 3 stages:
+  - Stage 1: Initial feed (10mm @ 5mm/s)
+  - Stage 2: Prime extruder (15mm @ 10mm/s)  
+  - Stage 3: Final extrusion (5mm @ 2.5mm/s)
+
+#### SMART_UNLOAD Changes:
+- Reduced total unload distance from 560mm to 30.5mm
+- New retraction sequence for direct drive:
+  - Stage 1: Retract from nozzle (0.5mm @ 35mm/s)
+  - Stage 2: Clear hotend (15mm @ 25mm/s)
+  - Stage 3: Final retract (15mm @ 50mm/s)
+
+#### Other Changes:
+- Updated message from "Open bowden coupling" to "Remove filament from guide tube"
+
+---
+
+### 3. **flsun_func.cfg** (MODIFIED)
+
+#### Motion Sensor Changes:
+- **detection_length**: Reduced from 25.0mm to 10.0mm
+- Prevents false triggers common with direct drive's immediate response
+- Better suited for direct drive extrusion characteristics
+
+---
+
+### 4. **README.md** (MODIFIED)
+
+#### Major Updates:
+- Added "with Direct Drive Extruder (DDE)" to main description
+- Clarified the 700-800mm tube is a "Filament Guide Tube" not a bowden tube
+- Added explanation of Direct Drive Extruder mounting
+- Updated all pressure advance references for direct drive values
+- Changed calibration command from START=0.4 to START=0.02
+- Updated all loading/unloading sequences for direct drive distances
+- Replaced all "bowden" references with "filament guide tube"
+- Added note that guide tube doesn't affect retraction settings
+
+---
+
+## Technical Improvements
+
+### 1. **Direct Drive Optimization**
+- Properly configured pressure advance for immediate filament response
+- Retraction settings now match direct drive characteristics (0.5mm vs 500mm)
+- Loading/unloading sequences optimized for short filament path
+
+### 2. **Corrected Misconceptions**
+- Clarified that the long PTFE tube is just a guide, not affecting extrusion
+- Updated all documentation to reflect actual hardware configuration
+- Removed bowden-specific compensations that were causing issues
+
+### 3. **Expected Benefits**
+- Better print quality with proper pressure advance
+- Reduced stringing with appropriate retraction
+- More accurate filament sensor detection
+- Improved response to filament changes
+- Better handling of flexible filaments
+
+---
+
+## Migration Notes
+
+Users updating from the previous configuration should:
+1. Re-run pressure advance calibration starting at 0.02
+2. Update slicer retraction settings to 0.5-1.0mm
+3. Verify filament sensor sensitivity
+4. Test new load/unload sequences with each material type
+
+---
+
 ## [2025-07-19] - FLSUN S1 PRO Configuration Updates
 
 ### Summary
