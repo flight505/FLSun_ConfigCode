@@ -1,5 +1,24 @@
 # Changelog
 
+## [2025-07-21] - Remove Timelapse Configuration
+
+### Summary
+Removed timelapse configuration as it was causing issues and not needed.
+
+### Changes
+
+#### Files Modified:
+1. **printer.cfg** - Removed `[include timelapse.cfg]`
+2. **moonraker.conf** - Removed `[timelapse]` and `[update_manager timelapse]` sections
+3. **s1_pro_macros.cfg** - Removed TIMELAPSE macro
+4. **timelapse.cfg** - File deleted
+5. **README.md** - Removed timelapse documentation
+
+### Action Required
+Restart Klipper services after these changes.
+
+---
+
 ## [2025-07-21] - Delta Printer Build Volume Fix
 
 ### Summary
@@ -24,10 +43,10 @@ Restart Klipper to apply the fix.
 
 ---
 
-## [2025-07-21] - Timelapse Configuration and TMC5160 Fix
+## [2025-07-21] - TMC5160 Fix and Documentation Updates
 
 ### Summary
-Fixed TMC5160 configuration error and added comprehensive timelapse support with proper documentation for filename requirements.
+Fixed TMC5160 configuration error and added documentation for G-code filename best practices.
 
 ### Fixes
 
@@ -36,25 +55,13 @@ Fixed TMC5160 configuration error and added comprehensive timelapse support with
 - **Fix**: Removed invalid parameter while keeping valid ones (interpolate, stealthchop_threshold)
 - **Note**: CoolStep requires klipper_tmc_autotune extension if needed
 
-### New Features
-
-#### 1. **Timelapse Support** (moonraker.conf, printer.cfg, s1_pro_macros.cfg)
-- Added `[timelapse]` configuration to moonraker.conf
-- Added `[update_manager timelapse]` for automatic updates
-- Included timelapse.cfg in printer.cfg
-- Created TIMELAPSE macro for easy access
-
-#### 2. **Documentation Updates** (README.md)
-- Added timelapse configuration instructions
-- Documented slicer setup requirements for TIMELAPSE_TAKE_FRAME
+### Documentation Updates (README.md)
 - Added G-code filename best practices (use underscores, avoid special characters)
 - Explained why proper filenames prevent Klipper crashes
 
 ### Action Required
 1. **Restart Klipper** to clear TMC5160 error
-2. **Configure Slicer**: Add `TIMELAPSE_TAKE_FRAME` to layer change G-code
-3. **Select Camera**: In web interface Settings → Timelapse
-4. **Update Filenames**: Use underscores instead of spaces in G-code files
+2. **Update Filenames**: Use underscores instead of spaces in G-code files
 
 ---
 

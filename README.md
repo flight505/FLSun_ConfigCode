@@ -136,7 +136,6 @@ The configuration files contain comprehensive macros organized into the followin
 - `TMC` - Dump TMC driver information
 - `save_time` - Track total print time
 - `WAIT_FOR` - Wait with progress updates
-- `TIMELAPSE` - Timelapse photography marker
 
 ### 10. **Power Loss Recovery**
 - `SAVE_POWER_LOSS_PARAMS` - Save print state
@@ -408,18 +407,6 @@ Enhanced thermal runaway protection for all heaters:
 - Monitors temperature rise rates
 - Prevents runaway conditions
 - Automatic shutdown on anomalies
-
-### Timelapse Support
-Create stunning timelapse videos of your prints:
-- **Configuration**: Already included via `[include timelapse.cfg]`
-- **Usage**: Timelapse is off by default - enable in web interface
-- **Slicer Setup Required**: Add `TIMELAPSE_TAKE_FRAME` to layer change G-code:
-  - **PrusaSlicer/OrcaSlicer**: Printer Settings → Custom G-code → Before layer change
-  - **Cura**: Extensions → Post Processing → Insert at layer change
-- **Camera Selection**: Select camera in Settings → Timelapse before use
-- **Modes**: 
-  - Layermacro (recommended): Takes photo at each layer
-  - Hyperlapse: Time-based capture
 
 ## Best Practices
 
