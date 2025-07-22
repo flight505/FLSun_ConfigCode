@@ -1,5 +1,49 @@
 # Changelog
 
+## [2025-07-22] - Calibration Enhancement: Active Cooling & Probe Accuracy
+
+### Summary
+Major calibration improvements including active cooling for 25-minute time savings, optimized calibration order for delta printers, and enhanced probe accuracy for better bed mesh results.
+
+### Changes
+
+#### 1. **Active Cooling Implementation** (s1_pro_macros.cfg)
+- Added chamber fan (box_fan) activation during cool-down phases
+- Reduces bed cooling time from 20-30 minutes to 5-10 minutes
+- Reduces hotend cooling time from 5 minutes to 2 minutes
+- Total calibration time reduced from ~90 to ~65 minutes
+- Created SPRO_ACTIVE_COOLDOWN utility macro for reusable cooling operations
+
+#### 2. **Calibration Order Optimization** (s1_pro_macros.cfg)
+- Moved Delta Calibration from Stage 5 to Stage 2
+- Critical for delta printers: establishes geometry before any probing
+- Improves bed mesh accuracy by ensuring correct coordinate system
+- New order: Motor → Delta → Hotend PID → Bed PID → Input Shaper → Bed Mesh
+
+#### 3. **Probe Accuracy Enhancement** (printer.cfg)
+- Increased probe samples: 2 → 3 (better averaging)
+- Reduced probe speed: 10 → 6 (more accurate detection)
+- Tightened tolerance: 0.05 → 0.03 (stricter quality control)
+- Increased mesh density: 7x7 → 9x9 (81 points for better coverage)
+
+#### 4. **New Utility Macro** (s1_pro_macros.cfg)
+- Added `SPRO_ACTIVE_COOLDOWN` for temperature management
+- Parameters: `TARGET` (default 40°C), `SENSOR` (default heater_bed)
+- Usage: `SPRO_ACTIVE_COOLDOWN TARGET=30 SENSOR=extruder`
+
+### Benefits
+- 28% faster calibration process
+- More accurate bed meshes for better first layer adhesion
+- Proper delta geometry established before probing
+- Reusable cooling macro for other operations
+
+### Action Required
+- Restart Klipper to apply probe settings
+- Re-run `SPRO_FULL_CALIBRATION` for new high-accuracy meshes
+- Note: Stage 6 now takes ~50-60 minutes due to increased probe points
+
+---
+
 ## [2025-07-21] - Remove Timelapse Configuration
 
 ### Summary

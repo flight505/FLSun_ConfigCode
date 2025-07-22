@@ -16,6 +16,9 @@ This is a Klipper configuration repository for the FLSUN S1 PRO delta 3D printer
 - **Dual Filament Sensors**: System uses both runout detection and motion/clog detection sensors that must be managed together
 - **Dual-Zone Heated Bed**: Inner and outer heating zones are controlled separately for optimal temperature distribution
 - **TMC5160 Stepper Driver**: Advanced driver on extruder requires specific configuration parameters
+- **Active Cooling System**: Chamber fan (box_fan) is used during calibration cool-down phases to reduce wait times
+- **Probe Accuracy**: Configured for 9x9 mesh grid with 3 samples per point at reduced speed for optimal accuracy
+- **Calibration Order**: Delta calibration MUST be performed before bed mesh on delta printers
 
 ## Common Development Tasks
 When modifying configurations:
@@ -44,3 +47,9 @@ When modifying configurations:
 - Filament sensor states must always be restored after macro completion
 - Temperature limits are hardware-enforced but should be respected in macros
 - Delta printer homing must complete before any movement commands
+
+## Calibration Best Practices
+- **Order Matters**: On delta printers, always run delta calibration before bed mesh
+- **Active Cooling**: Use SPRO_ACTIVE_COOLDOWN or chamber fan during cool-down phases
+- **Probe Settings**: Higher sample count and slower speed improve mesh accuracy
+- **Full Calibration**: SPRO_FULL_CALIBRATION runs all calibrations in optimal order (~65 minutes)

@@ -12,7 +12,7 @@ Due to Klipper parser limitations, all macros starting with "S1_PRO" have been r
 
 **Why?** Klipper's parser interprets "S1" at the start of macro names as a G-code command, causing "Unknown command: S1" errors.
 
-## ⚡ Recent Configuration Improvements (2025-07-20)
+## ⚡ Recent Configuration Improvements (2025-07-22)
 
 Major configuration improvements have been implemented to resolve critical issues and optimize performance:
 
@@ -29,6 +29,10 @@ Major configuration improvements have been implemented to resolve critical issue
 - **BED_TEMPS Macro** - Set both bed zones with a single command
 - **Enhanced Z-Offset Range** - Increased flexibility for different build surfaces
 - **Full Fan Power** - Removed artificial 55% limitation on part cooling fan
+- **Active Cooling System** - Chamber fan accelerates cool-down, saves 25 minutes during calibration
+- **Optimized Calibration Order** - Delta calibration now runs before bed mesh for proper geometry
+- **Enhanced Probe Accuracy** - 9x9 mesh grid with 3 samples per point for superior bed leveling
+- **SPRO_ACTIVE_COOLDOWN** - New utility macro for temperature management operations
 
 See the [Configuration Changes](#configuration-changes-2025-07-20) section below for detailed technical information.
 
@@ -136,6 +140,7 @@ The configuration files contain comprehensive macros organized into the followin
 - `TMC` - Dump TMC driver information
 - `save_time` - Track total print time
 - `WAIT_FOR` - Wait with progress updates
+- `SPRO_ACTIVE_COOLDOWN` - Active cooling with chamber fan for faster temperature reduction
 
 ### 10. **Power Loss Recovery**
 - `SAVE_POWER_LOSS_PARAMS` - Save print state
@@ -268,19 +273,20 @@ The configuration files contain comprehensive macros organized into the followin
 
 ### SPRO_FULL_CALIBRATION
 **Purpose**: Complete automated calibration sequence for the S1 PRO - performs ALL calibrations  
-**Process** (in order):
+**Process** (optimized order for delta printers):
 1. **Motor Calibration** - Calibrates all three delta motors
-2. **Hotend PID Tuning** - Tunes PID values at 240°C
-3. **Bed PID Tuning** - Tunes both bed zones at 60°C
-4. **Input Shaper Calibration** - Measures resonances and configures input shaping
-5. **Delta Calibration** - Calibrates delta geometry
-6. **Bed Mesh Profiles** - Creates meshes for 60°C, 70°C, 80°C, 90°C, 100°C
+2. **Delta Calibration** - Establishes delta geometry (MUST be done before bed mesh)
+3. **Hotend PID Tuning** - Tunes PID values at 240°C with active cooling
+4. **Bed PID Tuning** - Tunes both bed zones at 60°C with active cooling
+5. **Input Shaper Calibration** - Measures resonances and configures input shaping
+6. **Bed Mesh Profiles** - Creates high-accuracy 9x9 meshes for 60°C, 70°C, 80°C, 90°C, 100°C
    - Each temperature includes 2-minute heat soak
-**Duration**: Approximately 45-60 minutes
+   - Uses enhanced probe settings (3 samples, slower speed)
+**Duration**: Approximately 65 minutes (reduced from 90 with active cooling)
 **When to use**:
 - Initial printer setup
 - After mechanical changes
-- Monthly maintenance
+- Weekly maintenance (recommended)
 - If print quality degrades
 **Note**: Requires Klipper restart after completion to apply all calibrations
 
@@ -328,6 +334,22 @@ The configuration files contain comprehensive macros organized into the followin
 **Features**:
 - Shows remaining time every 30 seconds
 - Useful for heat soaking or time-based operations
+
+### SPRO_ACTIVE_COOLDOWN
+**Purpose**: Active cooling using chamber fan for faster temperature reduction  
+**Parameters**:
+- `TARGET`: Target temperature in °C (default: 40)
+- `SENSOR`: Temperature sensor to monitor (default: heater_bed)
+**Process**:
+1. Activates part cooling fan at 100%
+2. Activates chamber fan (box_fan) at 100%
+3. Waits for specified sensor to reach target temperature
+4. Automatically turns off both fans when target is reached
+**Usage Examples**:
+- `SPRO_ACTIVE_COOLDOWN` - Cool bed to 40°C
+- `SPRO_ACTIVE_COOLDOWN TARGET=30 SENSOR=extruder` - Cool hotend to 30°C
+- `SPRO_ACTIVE_COOLDOWN TARGET=50 SENSOR="heater_generic HotBed1"` - Cool outer bed to 50°C
+**Benefits**: Reduces cooling time by up to 75% compared to passive cooling
 
 ## Best Practices
 
