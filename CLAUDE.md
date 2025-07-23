@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. 
 
 ## Repository Overview
 This is a Klipper configuration repository for the FLSUN S1 PRO delta 3D printer. It contains configuration files and custom macros for printer control, not traditional source code.
