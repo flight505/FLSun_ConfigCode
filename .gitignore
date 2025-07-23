@@ -21,3 +21,4 @@ backup/
 __pycache__/
 *.py[cod]
 *$py.class
+klippy.log
