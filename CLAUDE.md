@@ -17,7 +17,7 @@ This is a Klipper configuration repository for the FLSUN S1 PRO delta 3D printer
 - **Dual-Zone Heated Bed**: Inner and outer heating zones are controlled separately for optimal temperature distribution
 - **TMC5160 Stepper Driver**: Advanced driver on extruder requires specific configuration parameters
 - **Active Cooling System**: Chamber fan (box_fan) is used during calibration cool-down phases to reduce wait times
-- **Probe Accuracy**: Configured for 9x9 mesh grid with 3 samples per point at reduced speed for optimal accuracy
+- **Probe Accuracy**: Configured for 9x9 mesh grid with 3 samples per point at reduced speed, using 0.05 tolerance to account for thermal expansion
 - **Calibration Order**: Delta calibration MUST be performed before bed mesh on delta printers
 
 ## Common Development Tasks

@@ -224,6 +224,27 @@ The calibration now uses enhanced probe settings for superior accuracy:
 3. **Tighter Tolerance**: Ensures consistent measurements
 4. **Denser Mesh**: Captures subtle bed variations
 
+## Probe Tolerance and Thermal Expansion
+
+### Overview
+When performing bed mesh calibration on a heated bed, thermal expansion can cause probe measurements to vary. The probe tolerance setting determines how much variation is acceptable between multiple samples at the same point.
+
+### Factory vs Optimized Settings
+- **Factory Setting**: `samples_tolerance: 0.05` (allows 0.05mm variation)
+- **Previous Setting**: `samples_tolerance: 0.03` (tighter tolerance)
+- **Current Setting**: `samples_tolerance: 0.05` (restored to factory default)
+
+### Why This Matters
+1. **Thermal Expansion**: As the bed heats, it expands slightly, causing minor height variations
+2. **Probe Consistency**: Tighter tolerances can cause "Probe samples exceed tolerance" errors
+3. **Calibration Reliability**: Factory tolerance accounts for normal thermal effects
+4. **Time Efficiency**: Fewer retries needed when tolerance matches physical reality
+
+### Recommendations
+- Use factory tolerance (0.05) for heated bed calibrations
+- Only tighten tolerance if doing cold bed calibration
+- If you see frequent "Probe samples exceed tolerance" errors, check bed temperature stability
+
 ## Next Steps
 After successful calibration:
 1. Run a test print to verify results

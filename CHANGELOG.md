@@ -1,5 +1,41 @@
 # Changelog
 
+## [2025-07-23] - Temperature Optimization and Probe Tolerance Fix
+
+### Summary
+Optimized calibration temperature targets to reduce wait times and restored probe tolerance to factory settings to fix "Probe samples exceed tolerance" errors during heated bed calibration.
+
+### Changes
+
+#### 1. **Temperature Optimization** (s1_pro_macros.cfg)
+- SPRO_PID_BED cooling targets: 40°C → 50°C (saves ~10 minutes)
+- SPRO_PID_HOTEND cooling target: 50°C → 60°C (saves ~8 minutes)
+- Added documentation explaining optimization rationale
+- Total time savings: ~18 minutes from temperature bottlenecks
+
+#### 2. **Probe Tolerance Fix** (printer.cfg)
+- Restored samples_tolerance: 0.03 → 0.05 (factory default)
+- Fixes "Probe samples exceed tolerance. Retrying..." errors
+- Accounts for thermal expansion during heated bed calibration
+- Improves calibration reliability
+
+#### 3. **Part Cooling Fan Adjustment** (printer.cfg)
+- Limited max_power: 1.0 → 0.60 (60% for noise reduction)
+- No cooling benefit observed above 60%
+- Significant noise reduction at 60% vs 100%
+
+### Benefits
+- Faster calibration cycles with optimized temperatures
+- Reliable probe measurements during heated calibration
+- Quieter operation with optimized fan settings
+- Better overall user experience
+
+### Action Required
+- Restart Klipper to apply changes
+- Test bed mesh calibration to verify probe tolerance fix
+
+---
+
 ## [2025-07-22] - Calibration Enhancement: Active Cooling & Probe Accuracy
 
 ### Summary

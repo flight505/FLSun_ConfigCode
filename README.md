@@ -31,7 +31,7 @@ Major configuration improvements have been implemented to resolve critical issue
 - **Full Fan Power** - Removed artificial 55% limitation on part cooling fan
 - **Active Cooling System** - Chamber fan accelerates cool-down, saves 25 minutes during calibration
 - **Optimized Calibration Order** - Delta calibration now runs before bed mesh for proper geometry
-- **Enhanced Probe Accuracy** - 9x9 mesh grid with 3 samples per point for superior bed leveling
+- **Enhanced Probe Accuracy** - 9x9 mesh grid with 3 samples per point and optimized tolerance for reliable calibration
 - **SPRO_ACTIVE_COOLDOWN** - New utility macro for temperature management operations
 
 See the [Configuration Changes](#configuration-changes-2025-07-20) section below for detailed technical information.
